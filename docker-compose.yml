@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  rockmongo-app:
+    image: lissonpsantos2/ubuntu-phps
+    restart: always
+    volumes:
+      - ./:/var/www/dev
+    ports:
+      - 8001:80
+    depends_on:
+      - mongodb
+    stdin_open: true
+    tty: true
+    entrypoint:
+      - bash
+      - "entrypoint.sh"
+    working_dir: /var/www/dev
